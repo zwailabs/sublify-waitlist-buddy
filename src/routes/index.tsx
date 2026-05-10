@@ -78,29 +78,18 @@ function Index() {
           </div>
 
           {/* Right — form */}
-          <div className="flex flex-col justify-center">
-            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-              § 001 — Early access
-            </p>
-            <h1 className="mt-5 font-display text-4xl font-semibold leading-[1.02] tracking-tight sm:text-5xl lg:text-6xl">
-              Stop bleeding money on{" "}
-              <span className="italic text-muted-foreground">forgotten</span>{" "}
-              trials.
+          <div id="waitlist" className="flex flex-col justify-center">
+            <h1 className="font-display text-4xl font-semibold leading-[1.02] tracking-tight sm:text-5xl lg:text-6xl">
+              Claim your ticket.
             </h1>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
-              Sublify is an elite financial auditor that tracks every
-              subscription, audits your recurring cash flow and arms you with a
-              high-fidelity calendar — so a $9.99 charge never sneaks past you
-              again.
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+              Drop your name and email — we'll send a single, considered note
+              the moment Sublify opens its doors.
             </p>
 
-            <div id="waitlist" className="mt-10 max-w-md">
+            <div className="mt-8 max-w-md">
               <WaitlistForm />
             </div>
-
-            <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-              ◆ One email when we launch · No spam, ever
-            </p>
           </div>
         </div>
       </section>
