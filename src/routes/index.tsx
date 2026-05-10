@@ -1,7 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { WaitlistForm } from "@/components/sublify/WaitlistForm";
-import { LedgerCard } from "@/components/sublify/LedgerCard";
-import { Marquee } from "@/components/sublify/Marquee";
+
+const IMAGES = [
+  "https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/1.jpg",
+  "https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/2.jpg",
+  "https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/3.jpg",
+  "https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/4.jpg",
+  "https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/5.jpg",
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,184 +30,92 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const heroImage = useMemo(
+    () => IMAGES[Math.floor(Math.random() * IMAGES.length)],
+    [],
+  );
+
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      {/* Top bar */}
-      <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
-        <div className="flex items-center gap-2">
-          <SublifyMark />
-          <span className="font-display text-lg font-semibold tracking-tight">Sublify</span>
+    <main className="flex min-h-screen flex-col bg-background text-foreground">
+      {/* Top navbar */}
+      <header className="border-b border-border">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
+          <div className="flex items-center gap-2">
+            <SublifyMark />
+            <span className="font-display text-lg font-semibold tracking-tight">
+              Sublify
+            </span>
+          </div>
+          <div className="hidden items-center gap-8 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground md:flex">
+            <span>Est. MMXXVI</span>
+            <span className="blink">Private beta</span>
+          </div>
+          <a
+            href="#waitlist"
+            className="rounded border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground transition-colors hover:bg-foreground hover:text-background"
+          >
+            Join waitlist
+          </a>
         </div>
-        <div className="hidden items-center gap-8 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground md:flex">
-          <span>Est. MMXXVI</span>
-          <span>Private beta</span>
-        </div>
-        <a
-          href="#waitlist"
-          className="rounded border border-foreground/20 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground transition-colors hover:bg-foreground hover:text-background"
-        >
-          Join waitlist
-        </a>
       </header>
 
-      {/* Hero */}
-      <section className="mx-auto max-w-7xl px-6 pb-20 pt-10 lg:px-10 lg:pt-16">
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-7">
-            <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-              <span className="size-1.5 rounded-full bg-foreground" />
-              <span>Issue 001 — The subscription problem</span>
-            </div>
+      {/* Body — split */}
+      <section className="flex-1">
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-12 lg:grid-cols-2 lg:gap-16 lg:px-10 lg:py-20">
+          {/* Left — image */}
+          <div className="rise relative aspect-square w-full overflow-hidden rounded-md border border-border bg-card lg:aspect-auto">
+            <img
+              src={heroImage}
+              alt="Sublify preview"
+              className="h-full w-full object-cover"
+              loading="eager"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
+            <p className="absolute bottom-4 left-4 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/80">
+              ◆ Vol. 0{IMAGES.indexOf(heroImage) + 1} / {IMAGES.length}
+            </p>
+          </div>
 
-            <h1 className="rise mt-6 font-display text-5xl font-semibold leading-[0.95] tracking-tight text-foreground sm:text-6xl lg:text-[5.5rem]">
-              Stop bleeding
-              <br />
-              money on
-              <br />
-              <span className="italic">forgotten</span> trials.
+          {/* Right — form */}
+          <div className="flex flex-col justify-center">
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+              § 001 — Early access
+            </p>
+            <h1 className="mt-5 font-display text-4xl font-semibold leading-[1.02] tracking-tight sm:text-5xl lg:text-6xl">
+              Stop bleeding money on{" "}
+              <span className="italic text-muted-foreground">forgotten</span>{" "}
+              trials.
             </h1>
-
-            <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
               Sublify is an elite financial auditor that tracks every
-              subscription, analyzes your recurring cash flow and arms you with
-              a high-fidelity calendar so a $9.99 charge never sneaks past you
+              subscription, audits your recurring cash flow and arms you with a
+              high-fidelity calendar — so a $9.99 charge never sneaks past you
               again.
             </p>
 
-            <div id="waitlist" className="mt-10 max-w-xl">
+            <div id="waitlist" className="mt-10 max-w-md">
               <WaitlistForm />
             </div>
 
-            <dl className="mt-12 grid max-w-xl grid-cols-3 gap-6 border-t border-foreground/15 pt-6">
-              <Stat k="Avg. waste / yr" v="$348" />
-              <Stat k="Trials caught" v="98%" />
-              <Stat k="Setup time" v="< 2 min" />
-            </dl>
-          </div>
-
-          <div className="relative lg:col-span-5">
-            <div className="sticky top-10">
-              <LedgerCard />
-              <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                ◆ Live preview · not your real data
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <Marquee />
-
-      {/* How it works */}
-      <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10">
-        <div className="grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-              § 02 — The system
-            </p>
-            <h2 className="mt-4 font-display text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-              Three moves.
-              <br />
-              Total clarity.
-            </h2>
-            <p className="mt-4 max-w-sm text-muted-foreground">
-              We built Sublify around the belief that your money deserves an
-              auditor as serious as you are.
+            <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+              ◆ One email when we launch · No spam, ever
             </p>
           </div>
-
-          <div className="grid gap-px bg-foreground/10 lg:col-span-8 lg:grid-cols-3">
-            <Step
-              n="01"
-              title="Detect"
-              body="Connect your inbox or card. Sublify uncovers every recurring charge — even the ones you forgot existed."
-            />
-            <Step
-              n="02"
-              title="Audit"
-              body="See cash flow by month, by category, by stupid impulse from 2023. We surface the leaks, you decide."
-            />
-            <Step
-              n="03"
-              title="Defend"
-              body="High-fidelity calendar + smart daily reminders. Cancel before the trial bites. Renew on your terms."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Manifesto */}
-      <section className="border-y border-foreground/15 bg-paper-deep/50">
-        <div className="mx-auto max-w-5xl px-6 py-24 text-center lg:px-10">
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-            ◆ Manifesto
-          </p>
-          <p className="mt-6 font-display text-3xl font-medium leading-snug tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-            “The average person spends{" "}
-            <span className="italic">$219 a month</span> on subscriptions and
-            can name maybe four of them. Sublify exists so you stop paying for
-            services you stopped loving.”
-          </p>
-          <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-            — Wayne, founder
-          </p>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="mx-auto max-w-4xl px-6 py-28 text-center lg:px-10">
-        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-          § 04 — Early access
-        </p>
-        <h2 className="mt-4 font-display text-4xl font-semibold tracking-tight sm:text-6xl">
-          Be in the first hundred.
-        </h2>
-        <p className="mx-auto mt-5 max-w-lg text-muted-foreground">
-          We're letting people in slowly, in batches. Join the list and we'll
-          send a single, considered email when your seat is ready.
-        </p>
-        <div className="mx-auto mt-10 max-w-lg">
-          <WaitlistForm />
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-foreground/15">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-8 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:flex-row lg:px-10">
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:flex-row lg:px-10">
           <div className="flex items-center gap-2">
             <SublifyMark small />
             <span>Sublify © {new Date().getFullYear()}</span>
           </div>
           <span className="blink">Pre-launch · v0.1</span>
-          <span>Built with intention</span>
+          <span>Built with intention by Wayne</span>
         </div>
       </footer>
     </main>
-  );
-}
-
-function Stat({ k, v }: { k: string; v: string }) {
-  return (
-    <div>
-      <dd className="font-display text-2xl font-semibold text-foreground">{v}</dd>
-      <dt className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-        {k}
-      </dt>
-    </div>
-  );
-}
-
-function Step({ n, title, body }: { n: string; title: string; body: string }) {
-  return (
-    <div className="bg-background p-8 transition-colors hover:bg-paper-deep/60">
-      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-        Step {n}
-      </p>
-      <h3 className="mt-4 font-display text-2xl font-semibold tracking-tight text-foreground">
-        {title}
-      </h3>
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{body}</p>
-    </div>
   );
 }
 
@@ -208,7 +123,15 @@ function SublifyMark({ small = false }: { small?: boolean }) {
   const size = small ? 18 : 26;
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
-      <rect x="1" y="1" width="30" height="30" rx="6" stroke="currentColor" strokeWidth="1.5" />
+      <rect
+        x="1"
+        y="1"
+        width="30"
+        height="30"
+        rx="6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
       <path
         d="M9 20c1.6 1.5 4 2.4 6.5 2.4 3 0 5-1.2 5-3 0-4.5-11-2.6-11-7.4 0-1.8 2-3 5-3 2.5 0 4.9 1 6.5 2.4"
         stroke="currentColor"
