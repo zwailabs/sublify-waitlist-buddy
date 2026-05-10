@@ -45,9 +45,6 @@ function Index() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
           <div className="flex items-center gap-2">
             <SublifyMark />
-            <span className="font-display text-lg font-semibold tracking-tight">
-              Sublify
-            </span>
           </div>
           <div className="hidden items-center gap-8 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground md:flex">
             <span>Est. MMXXVI</span>
