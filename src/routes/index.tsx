@@ -61,9 +61,9 @@ function Index() {
 
       {/* Body — split */}
       <section className="flex-1">
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-12 lg:grid-cols-2 lg:gap-16 lg:px-10 lg:py-20">
+        <div className="mx-auto grid max-w-[1500px] gap-10 px-6 py-12 lg:grid-cols-12 lg:gap-14 lg:px-10 lg:py-16">
           {/* Left — image */}
-          <div className="rise relative w-full overflow-hidden rounded-md border border-border bg-card">
+          <div className="rise relative w-full overflow-hidden rounded-md border border-border bg-card lg:col-span-8">
             <img
               src={heroImage}
               alt="Sublify preview"
@@ -78,8 +78,8 @@ function Index() {
           </div>
 
           {/* Right — form */}
-          <div id="waitlist" className="flex flex-col justify-center">
-            <h1 className="font-display text-4xl font-semibold leading-[1.02] tracking-tight sm:text-5xl lg:text-6xl">
+          <div id="waitlist" className="flex flex-col justify-center lg:col-span-4">
+            <h1 className="font-display text-3xl font-bold uppercase leading-[1.05] tracking-tight sm:text-4xl lg:text-5xl">
               Claim your ticket.
             </h1>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
