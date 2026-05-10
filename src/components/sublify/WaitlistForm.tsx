@@ -1,7 +1,8 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { z } from "zod";
 
-const Lanyard = lazy(() => import("@/components/lanyard/Lanyard"));
+const loadLanyard = () => import("@/components/lanyard/Lanyard");
+const Lanyard = lazy(loadLanyard);
 
 const schema = z.object({
   name: z
