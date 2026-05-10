@@ -69,7 +69,7 @@ function Index() {
             />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
             <p className="absolute bottom-4 left-4 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/80">
-              ◆ Vol. {String(IMAGES.indexOf(heroImage) + 1).padStart(2, "0")} / {IMAGES.length}
+              ◆ The feeling after downloading Sublify
             </p>
           </div>
 
