@@ -97,8 +97,8 @@ function Index() {
             <SublifyMark small />
             <span>Sublify © {new Date().getFullYear()}</span>
           </div>
-          <span className="blink">Pre-launch · v0.1</span>
-          <span>Built with intention by Wayne</span>
+          <span className="blink">Pre-launch · v1.2.9</span>
+          <span>Crafted with love by ZW &amp; AI</span>
         </div>
       </footer>
     </main>
