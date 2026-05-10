@@ -80,7 +80,7 @@ export function WaitlistForm() {
           You're in.
         </h3>
         <p className="mt-2 text-sm text-muted-foreground">
-          We'll write the moment Sublify opens its doors.
+          We'll write the moment Sublify is published.
         </p>
         <button
           onClick={() => setPosition(null)}
@@ -106,6 +106,7 @@ export function WaitlistForm() {
           }}
           placeholder="Your name"
           aria-label="Name"
+          id="waitlist-name"
           className="w-full rounded border border-border bg-card px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-foreground focus:outline-none"
         />
         <input
@@ -123,10 +124,11 @@ export function WaitlistForm() {
         />
         <button
           type="submit"
-          className="group inline-flex items-center justify-center gap-2 rounded bg-foreground px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-background transition-transform hover:-translate-y-0.5"
+          className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded bg-foreground px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-background shadow-[0_0_0_0_rgba(255,255,255,0)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-10px_rgba(255,255,255,0.35)] active:translate-y-0 active:scale-[0.98] active:duration-75"
         >
-          Claim your ticket
-          <span className="transition-transform group-hover:translate-x-0.5">
+          <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-background/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+          <span className="relative">Claim your ticket</span>
+          <span className="relative transition-transform duration-300 group-hover:translate-x-1">
             →
           </span>
         </button>

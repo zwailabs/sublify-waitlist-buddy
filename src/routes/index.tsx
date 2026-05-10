@@ -48,9 +48,19 @@ function Index() {
           </div>
           <a
             href="#waitlist"
-            className="rounded border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground transition-colors hover:bg-foreground hover:text-background"
+            onClick={(e) => {
+              e.preventDefault();
+              const el = document.getElementById("waitlist");
+              el?.scrollIntoView({ behavior: "smooth", block: "start" });
+              setTimeout(() => {
+                const input = document.getElementById("waitlist-name") as HTMLInputElement | null;
+                input?.focus({ preventScroll: true });
+              }, 450);
+            }}
+            className="group relative overflow-hidden rounded border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground transition-all duration-300 hover:border-foreground hover:shadow-[0_8px_24px_-12px_rgba(255,255,255,0.4)] active:scale-[0.96] active:duration-75"
           >
-            Join waitlist
+            <span className="absolute inset-0 -translate-x-full bg-foreground transition-transform duration-300 ease-out group-hover:translate-x-0" />
+            <span className="relative transition-colors duration-300 group-hover:text-background">Join waitlist</span>
           </a>
         </div>
       </header>
@@ -99,7 +109,7 @@ function Index() {
               <span>Sublify © {new Date().getFullYear()}</span>
             </div>
             <span className="blink sm:justify-self-center sm:text-center">Pre-launch · v1.2.9</span>
-            <span className="sm:justify-self-end sm:text-right">Crafted with love by ZW &amp; AI</span>
+            <span className="sm:justify-self-end sm:text-right">Built with love by ZW &amp; AI</span>
           </div>
           <nav className="flex items-center justify-center gap-8 pt-2">
             <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
