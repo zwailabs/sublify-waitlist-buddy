@@ -92,7 +92,7 @@ function Index() {
 
       {/* Footer */}
       <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:flex-row lg:px-10">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:flex-row sm:px-6 sm:text-left lg:px-10">
           <div className="flex items-center gap-2">
             <SublifyMark small />
             <span>Sublify © {new Date().getFullYear()}</span>
