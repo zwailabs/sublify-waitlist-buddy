@@ -42,6 +42,14 @@ export function WaitlistForm() {
 
   useEffect(() => {
     setCount(readList().length);
+    // Warm up the heavy 3D chunk so the lanyard appears instantly on submit.
+    const idle = (cb: () => void) =>
+      "requestIdleCallback" in window
+        ? (window as unknown as { requestIdleCallback: (cb: () => void) => number }).requestIdleCallback(cb)
+        : window.setTimeout(cb, 600);
+    idle(() => {
+      void loadLanyard();
+    });
   }, []);
 
   function onSubmit(e: React.FormEvent) {
