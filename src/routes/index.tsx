@@ -74,8 +74,8 @@ function Index() {
           </div>
 
           {/* Right — form */}
-          <div id="waitlist" className="w-full max-w-md justify-self-start p-8 text-left lg:col-span-5 lg:p-10">
-            <h1 className="font-display text-3xl font-black uppercase leading-[1.05] tracking-[0.02em] sm:text-4xl lg:text-5xl">
+          <div id="waitlist" className="w-full max-w-md justify-self-start px-0 py-2 text-left sm:p-8 lg:col-span-5 lg:p-10">
+            <h1 className="font-display text-2xl font-black uppercase leading-[1.05] tracking-[0.02em] sm:text-4xl lg:text-5xl">
               Claim your ticket.
             </h1>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
