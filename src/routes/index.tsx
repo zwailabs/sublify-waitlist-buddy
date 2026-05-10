@@ -57,7 +57,7 @@ function Index() {
 
       {/* Body — split */}
       <section className="flex-1">
-        <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-12 py-12 lg:grid-cols-12 lg:gap-14 lg:px-20 lg:py-16">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-[10px] px-12 py-12 lg:grid-cols-12 lg:gap-[10px] lg:px-20 lg:py-16">
           {/* Left — image */}
           <div className="rise relative mx-auto w-full max-w-[800px] overflow-hidden rounded-md border border-border bg-card lg:col-span-7" style={{ aspectRatio: "800 / 600" }}>
             <img
