@@ -1,10 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { WaitlistForm } from "@/components/sublify/WaitlistForm";
 
 const IMAGES = Array.from({ length: 24 }, (_, i) =>
   `https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/ALPHAS%20(${i + 1}).png`,
 );
+
+// Cache the chosen hero across navigations so we don't re-download on every mount
+let cachedHero: string | null = null;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,10 +29,15 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const heroImage = useMemo(
-    () => IMAGES[Math.floor(Math.random() * IMAGES.length)],
-    [],
-  );
+  // Use a stable image for SSR to avoid hydration mismatch, then swap on client
+  const [heroImage, setHeroImage] = useState<string>(cachedHero ?? IMAGES[0]);
+
+  useEffect(() => {
+    if (!cachedHero) {
+      cachedHero = IMAGES[Math.floor(Math.random() * IMAGES.length)];
+      setHeroImage(cachedHero);
+    }
+  }, []);
 
   return (
     <main className="relative flex min-h-screen flex-col bg-background text-foreground">
