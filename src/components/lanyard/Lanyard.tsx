@@ -67,16 +67,19 @@ function fitText(
 function createInfoTexture(name?: string, email?: string) {
   if (typeof document === 'undefined') return null;
 
+  const W = 1024;
+  const H = 640;
+  const SCALE = 2;
   const canvas = document.createElement('canvas');
-  canvas.width = 2048;
-  canvas.height = 1280;
-  const ctx0 = canvas.getContext('2d');
-  if (ctx0) ctx0.scale(2, 2);
+  canvas.width = W * SCALE;
+  canvas.height = H * SCALE;
 
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
+  ctx.scale(SCALE, SCALE);
+  ctx.imageSmoothingQuality = 'high';
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, W, H);
 
   const panelGradient = ctx.createLinearGradient(0, 64, 0, 576);
   panelGradient.addColorStop(0, 'rgba(10, 10, 14, 0.96)');
@@ -93,7 +96,7 @@ function createInfoTexture(name?: string, email?: string) {
   ctx.fillStyle = 'rgba(255, 255, 255, 0.58)';
   ctx.font = '500 34px Arial, Helvetica, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('SUBLIFY · WAITLIST PASS', canvas.width / 2, 166);
+  ctx.fillText('SUBLIFY · WAITLIST PASS', W / 2, 166);
 
   const primaryText = (name?.trim() || 'WAITLIST').toUpperCase();
   const secondaryText = (email?.trim() || 'CLAIMED ACCESS').toLowerCase();
@@ -101,12 +104,12 @@ function createInfoTexture(name?: string, email?: string) {
   const primarySize = fitText(ctx, primaryText, 720, 118, 64, 700);
   ctx.font = `700 ${primarySize}px Arial, Helvetica, sans-serif`;
   ctx.fillStyle = '#ffffff';
-  ctx.fillText(primaryText, canvas.width / 2, 306);
+  ctx.fillText(primaryText, W / 2, 306);
 
   const secondarySize = fitText(ctx, secondaryText, 700, 54, 28, 500);
   ctx.font = `500 ${secondarySize}px Arial, Helvetica, sans-serif`;
   ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
-  ctx.fillText(secondaryText, canvas.width / 2, 390);
+  ctx.fillText(secondaryText, W / 2, 390);
 
   ctx.beginPath();
   ctx.moveTo(224, 436);
