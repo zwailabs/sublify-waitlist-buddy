@@ -231,74 +231,55 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
             </mesh>
             <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
-            {(name || email) && (
-              <Html
-                position={[0, 0.05, 0.02]}
-                center
-                distanceFactor={3.2}
-                zIndexRange={[100, 0]}
-                style={{ pointerEvents: 'none' }}
-              >
-                <div
-                  style={{
-                    width: 200,
-                    padding: '18px 14px',
-                    textAlign: 'center',
-                    fontFamily: 'Orbitron, ui-sans-serif, system-ui, sans-serif',
-                    color: '#0a0a0a',
-                    background: '#ffffff',
-                    border: '1px solid rgba(0,0,0,0.08)',
-                    boxShadow: '0 4px 14px rgba(0,0,0,0.08)',
-                    userSelect: 'none',
-                  }}
-                >
-                  <div style={{ fontSize: 9, letterSpacing: '0.32em', textTransform: 'uppercase', opacity: 0.55 }}>
-                    Sublify · Waitlist
-                  </div>
-                  <div style={{ marginTop: 14, fontSize: 26, fontWeight: 900, letterSpacing: '0.02em', textTransform: 'uppercase', lineHeight: 1, color: '#000' }}>
-                    {name}
-                  </div>
-                  <div style={{ marginTop: 10, fontSize: 11, letterSpacing: '0.18em', textTransform: 'lowercase', opacity: 0.7, wordBreak: 'break-all' }}>
-                    {email}
-                  </div>
-                </div>
-              </Html>
-            )}
             <Html
-              position={[0, -1.35, 0.02]}
-              center
-              distanceFactor={4}
+              transform
+              position={[0, 0, 0.021]}
+              scale={0.18}
               zIndexRange={[100, 0]}
               style={{ pointerEvents: 'none' }}
             >
               <div
                 style={{
+                  width: 360,
+                  height: 540,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 6,
+                  justifyContent: 'space-between',
+                  padding: '36px 24px',
+                  boxSizing: 'border-box',
+                  fontFamily: 'Orbitron, ui-sans-serif, system-ui, sans-serif',
+                  color: '#0a0a0a',
+                  background: '#ffffff',
                   userSelect: 'none',
                 }}
               >
-                <img
-                  src="https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/Applogo.png"
-                  alt="Sublify"
-                  width={44}
-                  height={44}
-                  style={{ borderRadius: 6, display: 'block' }}
-                />
-                <div
-                  style={{
-                    fontFamily: 'Orbitron, ui-sans-serif, system-ui, sans-serif',
-                    color: '#fff',
-                    fontSize: 9,
-                    letterSpacing: '0.32em',
-                    textTransform: 'uppercase',
-                    opacity: 0.8,
-                    textShadow: '0 1px 3px rgba(0,0,0,0.85)',
-                  }}
-                >
-                  Sublify
+                <div style={{ width: '100%', textAlign: 'center' }}>
+                  <div style={{ fontSize: 14, letterSpacing: '0.32em', textTransform: 'uppercase', opacity: 0.55 }}>
+                    Sublify · Waitlist
+                  </div>
+                  {(name || email) && (
+                    <>
+                      <div style={{ marginTop: 28, fontSize: 44, fontWeight: 900, letterSpacing: '0.02em', textTransform: 'uppercase', lineHeight: 1, color: '#000' }}>
+                        {name}
+                      </div>
+                      <div style={{ marginTop: 14, fontSize: 18, letterSpacing: '0.18em', textTransform: 'lowercase', opacity: 0.7, wordBreak: 'break-all' }}>
+                        {email}
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                  <img
+                    src="https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/Applogo.png"
+                    alt="Sublify"
+                    width={56}
+                    height={56}
+                    style={{ borderRadius: 8, display: 'block' }}
+                  />
+                  <div style={{ fontSize: 12, letterSpacing: '0.32em', textTransform: 'uppercase', opacity: 0.7 }}>
+                    Sublify
+                  </div>
                 </div>
               </div>
             </Html>
