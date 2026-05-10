@@ -222,12 +222,11 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
           >
             <mesh geometry={nodes.card.geometry}>
               <meshPhysicalMaterial
-                map={materials.base.map}
-                map-anisotropy={16}
+                color="#0a0a0a"
                 clearcoat={isMobile ? 0 : 1}
                 clearcoatRoughness={0.15}
-                roughness={0.9}
-                metalness={0.8}
+                roughness={0.6}
+                metalness={0.5}
               />
             </mesh>
             <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
