@@ -234,30 +234,29 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
             {(name || email) && (
               <Html
-                transform
-                occlude="blending"
-                position={[0, -0.15, 0.012]}
-                rotation={[0, 0, 0]}
-                distanceFactor={1}
+                position={[0, -0.2, 0.02]}
+                center
+                distanceFactor={4}
+                zIndexRange={[100, 0]}
                 style={{ pointerEvents: 'none' }}
               >
                 <div
                   style={{
-                    width: '120px',
+                    width: 220,
                     textAlign: 'center',
                     fontFamily: 'Orbitron, ui-sans-serif, system-ui, sans-serif',
                     color: '#fff',
-                    textShadow: '0 1px 2px rgba(0,0,0,0.55)',
+                    textShadow: '0 1px 3px rgba(0,0,0,0.85), 0 0 8px rgba(0,0,0,0.5)',
                     userSelect: 'none',
                   }}
                 >
-                  <div style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', opacity: 0.7 }}>
+                  <div style={{ fontSize: 10, letterSpacing: '0.28em', textTransform: 'uppercase', opacity: 0.85 }}>
                     Sublify · Waitlist
                   </div>
-                  <div style={{ marginTop: 6, fontSize: 14, fontWeight: 800, letterSpacing: '0.02em', textTransform: 'uppercase', lineHeight: 1.1 }}>
+                  <div style={{ marginTop: 8, fontSize: 22, fontWeight: 900, letterSpacing: '0.02em', textTransform: 'uppercase', lineHeight: 1.05 }}>
                     {name}
                   </div>
-                  <div style={{ marginTop: 4, fontSize: 7, letterSpacing: '0.18em', textTransform: 'uppercase', opacity: 0.85, wordBreak: 'break-all' }}>
+                  <div style={{ marginTop: 6, fontSize: 11, letterSpacing: '0.18em', textTransform: 'lowercase', opacity: 0.95, wordBreak: 'break-all' }}>
                     {email}
                   </div>
                 </div>
