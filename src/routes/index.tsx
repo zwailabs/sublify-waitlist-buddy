@@ -59,17 +59,17 @@ function Index() {
       <section className="flex-1">
         <div className="mx-auto grid max-w-[1500px] gap-10 px-6 py-12 lg:grid-cols-12 lg:gap-14 lg:px-10 lg:py-16">
           {/* Left — image */}
-          <div className="rise relative aspect-[4/3] w-full overflow-hidden rounded-md border border-border bg-card lg:col-span-8 lg:aspect-[16/10]">
+          <div className="rise relative w-full max-w-[800px] overflow-hidden rounded-md border border-border bg-card lg:col-span-8" style={{ aspectRatio: "800 / 600" }}>
             <img
               src={heroImage}
               alt="Sublify preview"
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-contain"
               loading="eager"
               decoding="async"
             />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
             <p className="absolute bottom-4 left-4 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/80">
-              ◆ Vol. 0{IMAGES.indexOf(heroImage) + 1} / {IMAGES.length}
+              ◆ Vol. {String(IMAGES.indexOf(heroImage) + 1).padStart(2, "0")} / {IMAGES.length}
             </p>
           </div>
 
