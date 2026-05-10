@@ -1,8 +1,8 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 
 const loadLanyard = () => import("@/components/lanyard/Lanyard");
-const Lanyard = lazy(loadLanyard);
 
 const schema = z.object({
   name: z
