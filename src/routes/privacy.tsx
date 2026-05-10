@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { SiteShell } from "@/components/sublify/SiteShell";
 import { SectionTOC, type TOCItem } from "@/components/sublify/SectionTOC";
 
@@ -24,18 +25,29 @@ const SECTIONS: TOCItem[] = [
 ];
 
 function PrivacyPage() {
+  const [tocFocused, setTocFocused] = useState(false);
   return (
     <SiteShell>
       <div className="mx-auto grid max-w-[1400px] gap-12 px-4 py-12 sm:px-8 sm:py-16 lg:grid-cols-12 lg:gap-16 lg:px-20 lg:py-20">
-        <article className="lg:col-span-9">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+        <article
+          className={`lg:col-span-9 transition-all duration-300 ${
+            tocFocused ? "blur-sm opacity-60" : "opacity-100"
+          }`}
+        >
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground transition-colors hover:text-foreground"
+          >
+            ← Back
+          </Link>
+          <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
             Last Updated: May 2026
           </p>
           <h1 className="mt-3 font-display text-4xl font-black uppercase leading-[1.05] tracking-[0.02em] sm:text-5xl">
             Privacy Policy
           </h1>
 
-          <div className="mt-12 space-y-12 text-sm leading-relaxed text-muted-foreground">
+          <div className="mt-12 space-y-12 text-base leading-7 text-foreground/80">
             <section id="introduction" className="scroll-mt-24">
               <h2 className="text-base font-semibold uppercase tracking-wider text-foreground">
                 01 · Introduction
@@ -188,7 +200,7 @@ function PrivacyPage() {
 
         <aside className="hidden lg:col-span-3 lg:block">
           <div className="sticky top-24">
-            <SectionTOC items={SECTIONS} />
+            <SectionTOC items={SECTIONS} onFocusChange={setTocFocused} />
           </div>
         </aside>
       </div>

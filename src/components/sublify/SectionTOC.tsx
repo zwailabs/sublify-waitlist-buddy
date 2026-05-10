@@ -2,38 +2,51 @@ import { useEffect, useState } from "react";
 
 export type TOCItem = { id: string; label: string };
 
-export function SectionTOC({ items }: { items: TOCItem[] }) {
+export function SectionTOC({
+  items,
+  onFocusChange,
+}: {
+  items: TOCItem[];
+  onFocusChange?: (focused: boolean) => void;
+}) {
   const [active, setActive] = useState(items[0]?.id ?? "");
 
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-    const visible = new Map<string, number>();
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) visible.set(e.target.id, e.intersectionRatio);
-          else visible.delete(e.target.id);
-        });
-        if (visible.size > 0) {
-          const top = [...visible.entries()].sort((a, b) => b[1] - a[1])[0][0];
-          setActive(top);
-        }
-      },
-      { rootMargin: "-20% 0px -60% 0px", threshold: [0, 0.25, 0.5, 1] },
-    );
-
-    items.forEach((it) => {
-      const el = document.getElementById(it.id);
-      if (el) obs.observe(el);
-    });
-    observers.push(obs);
-
-    return () => observers.forEach((o) => o.disconnect());
+    const compute = () => {
+      // Bottom-of-page guard so the LAST section can become active
+      const scrollBottom = window.innerHeight + window.scrollY;
+      if (scrollBottom >= document.documentElement.scrollHeight - 4) {
+        setActive(items[items.length - 1].id);
+        return;
+      }
+      const probe = window.innerHeight * 0.3;
+      let current = items[0]?.id ?? "";
+      for (const it of items) {
+        const el = document.getElementById(it.id);
+        if (!el) continue;
+        const top = el.getBoundingClientRect().top;
+        if (top - probe <= 0) current = it.id;
+      }
+      setActive(current);
+    };
+    compute();
+    window.addEventListener("scroll", compute, { passive: true });
+    window.addEventListener("resize", compute);
+    return () => {
+      window.removeEventListener("scroll", compute);
+      window.removeEventListener("resize", compute);
+    };
   }, [items]);
 
   return (
-    <nav aria-label="On this page" className="flex flex-col gap-3">
+    <nav
+      aria-label="On this page"
+      className="flex flex-col gap-3"
+      onMouseEnter={() => onFocusChange?.(true)}
+      onMouseLeave={() => onFocusChange?.(false)}
+      onFocus={() => onFocusChange?.(true)}
+      onBlur={() => onFocusChange?.(false)}
+    >
       <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-muted-foreground">
         On this page
       </p>

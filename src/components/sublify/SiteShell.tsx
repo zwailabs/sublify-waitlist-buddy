@@ -34,7 +34,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
             to="/"
             className="rounded border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground transition-colors duration-200 hover:bg-foreground hover:text-background active:scale-[0.97]"
           >
-            ← Home
+            Join waitlist
           </Link>
         </div>
       </header>
