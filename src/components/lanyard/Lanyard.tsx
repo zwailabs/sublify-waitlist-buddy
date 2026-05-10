@@ -245,6 +245,16 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
 
   const { nodes, materials } = useGLTF(cardGLB) as any;
   const texture = useTexture(lanyard);
+  const logoTexture = useTexture(SUBLIFY_LOGO_URL);
+  const infoTexture = useMemo(() => createInfoTexture(name, email), [name, email]);
+  const wordmarkTexture = useMemo(() => createWordmarkTexture('SUBLIFY'), []);
+  const cardMaterial = useMemo(() => {
+    const baseMaterial = (materials.base?.clone?.() ?? new THREE.MeshStandardMaterial()) as THREE.MeshStandardMaterial;
+    baseMaterial.color = new THREE.Color('#0e0e12');
+    baseMaterial.roughness = 0.42;
+    baseMaterial.metalness = 0.38;
+    return baseMaterial;
+  }, [materials.base]);
   const [curve] = useState(
     () =>
       new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
@@ -303,6 +313,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
 
   curve.curveType = 'chordal';
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  logoTexture.colorSpace = THREE.SRGBColorSpace;
 
   return (
     <>
@@ -339,68 +350,36 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
             }}
           >
             <mesh geometry={nodes.card.geometry}>
-              <meshPhysicalMaterial
-                color="#0a0a0a"
-                clearcoat={isMobile ? 0 : 1}
-                clearcoatRoughness={0.15}
-                roughness={0.6}
-                metalness={0.5}
-              />
+              <primitive object={cardMaterial} attach="material" />
             </mesh>
             <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
-            <Html
-              transform
-              position={[0, 0, 0.021]}
-              scale={0.18}
-              zIndexRange={[100, 0]}
-              style={{ pointerEvents: 'none' }}
-            >
-              <div
-                style={{
-                  width: 360,
-                  height: 540,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '36px 24px',
-                  boxSizing: 'border-box',
-                  fontFamily: 'Orbitron, ui-sans-serif, system-ui, sans-serif',
-                  color: '#0a0a0a',
-                  background: '#ffffff',
-                  userSelect: 'none',
-                }}
-              >
-                <div style={{ width: '100%', textAlign: 'center' }}>
-                  <div style={{ fontSize: 14, letterSpacing: '0.32em', textTransform: 'uppercase', opacity: 0.55 }}>
-                    Sublify · Waitlist
-                  </div>
-                  {(name || email) && (
-                    <>
-                      <div style={{ marginTop: 28, fontSize: 44, fontWeight: 900, letterSpacing: '0.02em', textTransform: 'uppercase', lineHeight: 1, color: '#000' }}>
-                        {name}
-                      </div>
-                      <div style={{ marginTop: 14, fontSize: 18, letterSpacing: '0.18em', textTransform: 'lowercase', opacity: 0.7, wordBreak: 'break-all' }}>
-                        {email}
-                      </div>
-                    </>
-                  )}
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                  <img
-                    src="https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/Applogo.png"
-                    alt="Sublify"
-                    width={56}
-                    height={56}
-                    style={{ borderRadius: 8, display: 'block' }}
-                  />
-                  <div style={{ fontSize: 12, letterSpacing: '0.32em', textTransform: 'uppercase', opacity: 0.7 }}>
-                    Sublify
-                  </div>
-                </div>
-              </div>
-            </Html>
+            <mesh position={[0, -0.03, 0.022]}>
+              <planeGeometry args={[1.42, 1.92]} />
+              <meshPhysicalMaterial
+                color="#08090d"
+                roughness={0.34}
+                metalness={0.58}
+                clearcoat={1}
+                clearcoatRoughness={0.18}
+              />
+            </mesh>
+            {infoTexture && (
+              <mesh position={[0, 0.2, 0.024]}>
+                <planeGeometry args={[1.14, 0.72]} />
+                <meshBasicMaterial transparent map={infoTexture} />
+              </mesh>
+            )}
+            <mesh position={[0, -0.6, 0.024]}>
+              <planeGeometry args={[0.42, 0.42]} />
+              <meshBasicMaterial transparent map={logoTexture} />
+            </mesh>
+            {wordmarkTexture && (
+              <mesh position={[0, -0.88, 0.024]}>
+                <planeGeometry args={[0.72, 0.16]} />
+                <meshBasicMaterial transparent map={wordmarkTexture} />
+              </mesh>
+            )}
           </group>
         </RigidBody>
       </group>
