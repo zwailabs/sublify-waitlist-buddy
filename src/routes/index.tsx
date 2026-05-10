@@ -2,13 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { WaitlistForm } from "@/components/sublify/WaitlistForm";
 
-const IMAGES = [
-  "https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/1.jpg",
-  "https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/2.jpg",
-  "https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/3.jpg",
-  "https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/4.jpg",
-  "https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/5.jpg",
-];
+const IMAGES = Array.from({ length: 24 }, (_, i) =>
+  `https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/ALPHAS%20(${i + 1}).png`,
+);
 
 export const Route = createFileRoute("/")({
   head: () => ({
