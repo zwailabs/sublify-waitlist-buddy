@@ -104,7 +104,13 @@ export function WaitlistForm() {
           Drag your ticket below.
         </p>
         <div className="relative mt-4 h-[420px] w-full overflow-hidden rounded">
-          <Suspense fallback={null}>
+          <Suspense
+            fallback={
+              <div className="flex h-full w-full items-center justify-center font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                Printing your ticket…
+              </div>
+            }
+          >
             <Lanyard position={[0, 0, 18]} gravity={[0, -40, 0]} name={ticket.name} email={ticket.email} />
           </Suspense>
         </div>
