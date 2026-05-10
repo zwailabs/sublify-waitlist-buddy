@@ -6,37 +6,30 @@ export function SectionTOC({ items }: { items: TOCItem[] }) {
   const [active, setActive] = useState(items[0]?.id ?? "");
 
   useEffect(() => {
-    const compute = () => {
-      const scrollY = window.scrollY;
-      const viewportH = window.innerHeight;
-      const docH = document.documentElement.scrollHeight;
+    const observers: IntersectionObserver[] = [];
+    const visible = new Map<string, number>();
 
-      // If we've scrolled to (near) the bottom, the last section wins —
-      // it can't otherwise reach the upper-third of the viewport.
-      if (scrollY + viewportH >= docH - 4) {
-        setActive(items[items.length - 1]?.id ?? "");
-        return;
-      }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) visible.set(e.target.id, e.intersectionRatio);
+          else visible.delete(e.target.id);
+        });
+        if (visible.size > 0) {
+          const top = [...visible.entries()].sort((a, b) => b[1] - a[1])[0][0];
+          setActive(top);
+        }
+      },
+      { rootMargin: "-20% 0px -60% 0px", threshold: [0, 0.25, 0.5, 1] },
+    );
 
-      const probe = scrollY + viewportH * 0.3;
-      let current = items[0]?.id ?? "";
-      for (const it of items) {
-        const el = document.getElementById(it.id);
-        if (!el) continue;
-        const top = el.getBoundingClientRect().top + scrollY;
-        if (top <= probe) current = it.id;
-        else break;
-      }
-      setActive(current);
-    };
+    items.forEach((it) => {
+      const el = document.getElementById(it.id);
+      if (el) obs.observe(el);
+    });
+    observers.push(obs);
 
-    compute();
-    window.addEventListener("scroll", compute, { passive: true });
-    window.addEventListener("resize", compute);
-    return () => {
-      window.removeEventListener("scroll", compute);
-      window.removeEventListener("resize", compute);
-    };
+    return () => observers.forEach((o) => o.disconnect());
   }, [items]);
 
   return (
@@ -67,7 +60,7 @@ export function SectionTOC({ items }: { items: TOCItem[] }) {
                   }`}
                 />
                 <span
-                  className={`text-[10px] uppercase tracking-[0.22em] transition-colors duration-200 ${
+                  className={`font-mono text-[10px] uppercase tracking-[0.22em] transition-colors duration-200 ${
                     isActive
                       ? "text-foreground"
                       : "text-muted-foreground group-hover:text-foreground"
