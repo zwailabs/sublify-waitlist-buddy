@@ -43,7 +43,7 @@ function Index() {
             <SublifyMark />
           </div>
           <div className="hidden items-center gap-8 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground md:flex">
-            <span>Est. MMXXVI</span>
+            <span>Est. 2026</span>
             <span className="blink">Private beta</span>
           </div>
           <a
