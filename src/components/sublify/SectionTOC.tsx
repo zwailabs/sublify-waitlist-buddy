@@ -12,8 +12,9 @@ export function SectionTOC({
   const [active, setActive] = useState(items[0]?.id ?? "");
 
   useEffect(() => {
+    let ticking = false;
     const compute = () => {
-      // Bottom-of-page guard so the LAST section can become active
+      ticking = false;
       const scrollBottom = window.innerHeight + window.scrollY;
       if (scrollBottom >= document.documentElement.scrollHeight - 4) {
         setActive(items[items.length - 1].id);
@@ -29,12 +30,17 @@ export function SectionTOC({
       }
       setActive(current);
     };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(compute);
+    };
     compute();
-    window.addEventListener("scroll", compute, { passive: true });
-    window.addEventListener("resize", compute);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     return () => {
-      window.removeEventListener("scroll", compute);
-      window.removeEventListener("resize", compute);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, [items]);
 
