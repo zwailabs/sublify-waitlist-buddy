@@ -69,7 +69,7 @@ function createInfoTexture(name?: string, email?: string) {
 
   const W = 1024;
   const H = 640;
-  const SCALE = 2;
+  const SCALE = 4;
   const canvas = document.createElement('canvas');
   canvas.width = W * SCALE;
   canvas.height = H * SCALE;
