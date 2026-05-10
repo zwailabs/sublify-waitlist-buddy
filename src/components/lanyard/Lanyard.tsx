@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unknown-property */
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture, Environment, Lightformer, Html } from '@react-three/drei';
+import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import {
   BallCollider,
   CuboidCollider,
@@ -22,6 +22,124 @@ import lanyard from './lanyard.png?url';
 import './Lanyard.css';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
+
+const SUBLIFY_LOGO_URL =
+  'https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/Applogo.png';
+
+function drawRoundedRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number
+) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+function fitText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+  startSize: number,
+  minSize: number,
+  weight: number
+) {
+  let size = startSize;
+  while (size > minSize) {
+    ctx.font = `${weight} ${size}px Arial, Helvetica, sans-serif`;
+    if (ctx.measureText(text).width <= maxWidth) break;
+    size -= 4;
+  }
+  return size;
+}
+
+function createInfoTexture(name?: string, email?: string) {
+  if (typeof document === 'undefined') return null;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 1024;
+  canvas.height = 640;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const panelGradient = ctx.createLinearGradient(0, 64, 0, 576);
+  panelGradient.addColorStop(0, 'rgba(10, 10, 14, 0.96)');
+  panelGradient.addColorStop(1, 'rgba(5, 5, 8, 0.82)');
+
+  drawRoundedRect(ctx, 84, 88, 856, 420, 56);
+  ctx.fillStyle = panelGradient;
+  ctx.fill();
+
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
+  ctx.stroke();
+
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.58)';
+  ctx.font = '500 34px Arial, Helvetica, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('SUBLIFY · WAITLIST PASS', canvas.width / 2, 166);
+
+  const primaryText = (name?.trim() || 'WAITLIST').toUpperCase();
+  const secondaryText = (email?.trim() || 'CLAIMED ACCESS').toLowerCase();
+
+  const primarySize = fitText(ctx, primaryText, 720, 118, 64, 700);
+  ctx.font = `700 ${primarySize}px Arial, Helvetica, sans-serif`;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(primaryText, canvas.width / 2, 306);
+
+  const secondarySize = fitText(ctx, secondaryText, 700, 54, 28, 500);
+  ctx.font = `500 ${secondarySize}px Arial, Helvetica, sans-serif`;
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+  ctx.fillText(secondaryText, canvas.width / 2, 390);
+
+  ctx.beginPath();
+  ctx.moveTo(224, 436);
+  ctx.lineTo(800, 436);
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
+  ctx.stroke();
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function createWordmarkTexture(text: string) {
+  if (typeof document === 'undefined') return null;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 768;
+  canvas.height = 160;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.86)';
+  ctx.font = '700 72px Arial, Helvetica, sans-serif';
+  ctx.fillText(text, canvas.width / 2, 108);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.needsUpdate = true;
+  return texture;
+}
 
 interface LanyardProps {
   position?: [number, number, number];
