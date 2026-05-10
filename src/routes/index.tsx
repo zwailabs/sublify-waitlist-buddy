@@ -106,7 +106,7 @@ function Index() {
 }
 
 function SublifyMark({ small = false }: { small?: boolean }) {
-  const size = small ? 22 : 32;
+  const size = small ? 28 : 56;
   return (
     <img
       src="https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/Applogo.png"
