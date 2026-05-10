@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 export type TOCItem = { id: string; label: string };
 
@@ -9,40 +9,7 @@ export function SectionTOC({
   items: TOCItem[];
   onFocusChange?: (focused: boolean) => void;
 }) {
-  const [active, setActive] = useState(items[0]?.id ?? "");
-
-  useEffect(() => {
-    let ticking = false;
-    const compute = () => {
-      ticking = false;
-      const scrollBottom = window.innerHeight + window.scrollY;
-      if (scrollBottom >= document.documentElement.scrollHeight - 4) {
-        setActive(items[items.length - 1].id);
-        return;
-      }
-      const probe = window.innerHeight * 0.3;
-      let current = items[0]?.id ?? "";
-      for (const it of items) {
-        const el = document.getElementById(it.id);
-        if (!el) continue;
-        const top = el.getBoundingClientRect().top;
-        if (top - probe <= 0) current = it.id;
-      }
-      setActive(current);
-    };
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(compute);
-    };
-    compute();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, [items]);
+  const active = useMemo(() => items[0]?.id ?? "", [items]);
 
   return (
     <nav
@@ -65,9 +32,7 @@ export function SectionTOC({
                 href={`#${it.id}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  document
-                    .getElementById(it.id)
-                    ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    document.getElementById(it.id)?.scrollIntoView({ block: "start" });
                 }}
                 className="group flex items-center gap-3"
               >
