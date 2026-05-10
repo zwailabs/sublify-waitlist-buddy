@@ -12,36 +12,31 @@ export function SectionTOC({
   const [active, setActive] = useState(items[0]?.id ?? "");
 
   useEffect(() => {
-    let ticking = false;
-    const compute = () => {
-      ticking = false;
-      const scrollBottom = window.innerHeight + window.scrollY;
-      if (scrollBottom >= document.documentElement.scrollHeight - 4) {
-        setActive(items[items.length - 1].id);
-        return;
-      }
-      const probe = window.innerHeight * 0.3;
-      let current = items[0]?.id ?? "";
-      for (const it of items) {
-        const el = document.getElementById(it.id);
-        if (!el) continue;
-        const top = el.getBoundingClientRect().top;
-        if (top - probe <= 0) current = it.id;
-      }
-      setActive(current);
-    };
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(compute);
-    };
-    compute();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
+    const sections = items
+      .map((item) => document.getElementById(item.id))
+      .filter((section): section is HTMLElement => Boolean(section));
+
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible?.target?.id) {
+          setActive(visible.target.id);
+        }
+      },
+      {
+        rootMargin: "-18% 0px -55% 0px",
+        threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
   }, [items]);
 
   return (
@@ -65,9 +60,7 @@ export function SectionTOC({
                 href={`#${it.id}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  document
-                    .getElementById(it.id)
-                    ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    document.getElementById(it.id)?.scrollIntoView({ block: "start" });
                 }}
                 className="group flex items-center gap-3"
               >
