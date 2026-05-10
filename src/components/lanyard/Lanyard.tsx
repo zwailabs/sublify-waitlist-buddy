@@ -129,20 +129,25 @@ function createWordmarkTexture(text: string) {
   if (typeof document === 'undefined') return null;
 
   const canvas = document.createElement('canvas');
-  canvas.width = 768;
-  canvas.height = 160;
+  canvas.width = 1536;
+  canvas.height = 320;
 
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
 
+  ctx.scale(2, 2);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.textAlign = 'center';
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.86)';
-  ctx.font = '700 72px Arial, Helvetica, sans-serif';
-  ctx.fillText(text, canvas.width / 2, 108);
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+  ctx.font = '800 96px Arial, Helvetica, sans-serif';
+  ctx.fillText(text, 768 / 2, 116);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 16;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
   texture.needsUpdate = true;
   return texture;
 }
