@@ -92,18 +92,22 @@ function Index() {
 
       {/* Footer */}
       <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:flex-row sm:px-6 sm:text-left lg:px-10">
-          <div className="flex items-center gap-2">
-            <SublifyMark small />
-            <span>Sublify © {new Date().getFullYear()}</span>
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:px-6 lg:px-10">
+          <div className="flex flex-col items-center justify-between gap-3 text-center sm:flex-row sm:text-left">
+            <div className="flex items-center gap-2">
+              <SublifyMark small />
+              <span>Sublify © {new Date().getFullYear()}</span>
+            </div>
+            <span className="blink">Pre-launch · v1.2.9</span>
+            <span>Crafted with love by ZW &amp; AI</span>
           </div>
-          <span className="blink">Pre-launch · v1.2.9</span>
-          <nav className="flex items-center gap-4">
-            <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
-            <Link to="/terms" className="hover:text-foreground">Terms</Link>
-            <Link to="/support" className="hover:text-foreground">Support</Link>
-          </nav>
-          <span>Crafted with love by ZW &amp; AI</span>
+          <div className="border-t border-border pt-3">
+            <nav className="flex items-center justify-center gap-6 sm:justify-start">
+              <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
+              <Link to="/terms" className="hover:text-foreground">Terms</Link>
+              <Link to="/support" className="hover:text-foreground">Support</Link>
+            </nav>
+          </div>
         </div>
       </footer>
     </main>
