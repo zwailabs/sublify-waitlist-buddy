@@ -232,6 +232,37 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
             </mesh>
             <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
+            {(name || email) && (
+              <Html
+                transform
+                occlude="blending"
+                position={[0, -0.15, 0.012]}
+                rotation={[0, 0, 0]}
+                distanceFactor={1}
+                style={{ pointerEvents: 'none' }}
+              >
+                <div
+                  style={{
+                    width: '120px',
+                    textAlign: 'center',
+                    fontFamily: 'Orbitron, ui-sans-serif, system-ui, sans-serif',
+                    color: '#fff',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.55)',
+                    userSelect: 'none',
+                  }}
+                >
+                  <div style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', opacity: 0.7 }}>
+                    Sublify · Waitlist
+                  </div>
+                  <div style={{ marginTop: 6, fontSize: 14, fontWeight: 800, letterSpacing: '0.02em', textTransform: 'uppercase', lineHeight: 1.1 }}>
+                    {name}
+                  </div>
+                  <div style={{ marginTop: 4, fontSize: 7, letterSpacing: '0.18em', textTransform: 'uppercase', opacity: 0.85, wordBreak: 'break-all' }}>
+                    {email}
+                  </div>
+                </div>
+              </Html>
+            )}
           </group>
         </RigidBody>
       </group>
