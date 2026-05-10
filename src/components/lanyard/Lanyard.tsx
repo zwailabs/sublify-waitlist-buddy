@@ -151,7 +151,7 @@ interface LanyardProps {
 }
 
 export default function Lanyard({
-  position = [0, 0, 20],
+  position = [0, 0, 28],
   gravity = [0, -40, 0],
   fov = 20,
   transparent = true,
@@ -317,7 +317,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
 
   return (
     <>
-      <group position={[0, 2.9, 0]}>
+      <group position={[0, 4.1, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type={'fixed' as RigidBodyProps['type']} />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps} type={'dynamic' as RigidBodyProps['type']}>
           <BallCollider args={[0.1]} />
@@ -335,9 +335,9 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
           type={dragged ? ('kinematicPosition' as RigidBodyProps['type']) : ('dynamic' as RigidBodyProps['type'])}
         >
           <CuboidCollider args={[0.8, 1.125, 0.01]} />
-          <group
-            scale={2.25}
-            position={[0, -1.2, -0.05]}
+            <group
+              scale={1.9}
+              position={[0, -1.02, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
             onPointerUp={(e: any) => {
