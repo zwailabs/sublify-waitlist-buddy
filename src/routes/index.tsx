@@ -123,24 +123,15 @@ function Index() {
 }
 
 function SublifyMark({ small = false }: { small?: boolean }) {
-  const size = small ? 18 : 26;
+  const size = small ? 22 : 32;
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
-      <rect
-        x="1"
-        y="1"
-        width="30"
-        height="30"
-        rx="6"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M9 20c1.6 1.5 4 2.4 6.5 2.4 3 0 5-1.2 5-3 0-4.5-11-2.6-11-7.4 0-1.8 2-3 5-3 2.5 0 4.9 1 6.5 2.4"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
+    <img
+      src="https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/Applogo.png"
+      alt="Sublify logo"
+      width={size}
+      height={size}
+      className="rounded"
+      style={{ width: size, height: size }}
+    />
   );
 }
