@@ -57,10 +57,9 @@ function Index() {
                 input?.focus({ preventScroll: true });
               }, 450);
             }}
-            className="group relative overflow-hidden rounded border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground transition-all duration-300 hover:border-foreground hover:shadow-[0_8px_24px_-12px_rgba(255,255,255,0.4)] active:scale-[0.96] active:duration-75"
+            className="rounded border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground transition-colors duration-200 hover:bg-foreground hover:text-background active:scale-[0.97]"
           >
-            <span className="absolute inset-0 -translate-x-full bg-foreground transition-transform duration-300 ease-out group-hover:translate-x-0" />
-            <span className="relative transition-colors duration-300 group-hover:text-background">Join waitlist</span>
+            Join waitlist
           </a>
         </div>
       </header>
