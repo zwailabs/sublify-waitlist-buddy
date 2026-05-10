@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { WaitlistForm } from "@/components/sublify/WaitlistForm";
 
@@ -98,6 +98,11 @@ function Index() {
             <span>Sublify © {new Date().getFullYear()}</span>
           </div>
           <span className="blink">Pre-launch · v1.2.9</span>
+          <nav className="flex items-center gap-4">
+            <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
+            <Link to="/terms" className="hover:text-foreground">Terms</Link>
+            <Link to="/support" className="hover:text-foreground">Support</Link>
+          </nav>
           <span>Crafted with love by ZW &amp; AI</span>
         </div>
       </footer>
