@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { z } from "zod";
+
+const Lanyard = lazy(() => import("@/components/lanyard/Lanyard"));
 
 const schema = z.object({
   name: z
@@ -28,11 +30,13 @@ function readList(): Entry[] {
   }
 }
 
+type Ticket = { position: number; name: string; email: string };
+
 export function WaitlistForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [position, setPosition] = useState<number | null>(null);
+  const [ticket, setTicket] = useState<Ticket | null>(null);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -51,7 +55,7 @@ export function WaitlistForm() {
     const existingIdx = list.findIndex((e) => e.email === normalized);
     if (existingIdx >= 0) {
       setError(null);
-      setPosition(existingIdx + 1);
+      setTicket({ position: existingIdx + 1, name: list[existingIdx].name, email: normalized });
       return;
     }
     const next: Entry[] = [
@@ -64,30 +68,37 @@ export function WaitlistForm() {
     ];
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     setError(null);
-    setPosition(next.length);
+    setTicket({ position: next.length, name: parsed.data.name, email: normalized });
     setCount(next.length);
     setName("");
     setEmail("");
   }
 
-  if (position !== null) {
+  if (ticket !== null) {
     return (
-      <div className="rise rounded border border-border bg-card p-6">
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-          Ticket · No. {String(position).padStart(4, "0")}
-        </p>
+      <div className="rise rounded border border-border bg-card p-4">
+        <div className="flex items-center justify-between">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            Ticket · No. {String(ticket.position).padStart(4, "0")}
+          </p>
+          <button
+            onClick={() => setTicket(null)}
+            className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground underline underline-offset-4 hover:text-foreground hover:no-underline"
+          >
+            Claim another
+          </button>
+        </div>
         <h3 className="mt-3 font-display text-2xl font-semibold text-foreground">
           You're in.
         </h3>
-        <p className="mt-2 text-sm text-muted-foreground">
-          We'll write the moment Sublify is published.
+        <p className="mt-1 text-sm text-muted-foreground">
+          Drag your ticket below.
         </p>
-        <button
-          onClick={() => setPosition(null)}
-          className="mt-4 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground underline underline-offset-4 hover:no-underline"
-        >
-          Claim another ticket
-        </button>
+        <div className="relative mt-4 h-[420px] w-full overflow-hidden rounded">
+          <Suspense fallback={null}>
+            <Lanyard position={[0, 0, 18]} gravity={[0, -40, 0]} name={ticket.name} email={ticket.email} />
+          </Suspense>
+        </div>
       </div>
     );
   }

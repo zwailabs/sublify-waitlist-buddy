@@ -2,7 +2,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
+import { useGLTF, useTexture, Environment, Lightformer, Html } from '@react-three/drei';
 import {
   BallCollider,
   CuboidCollider,
@@ -28,13 +28,17 @@ interface LanyardProps {
   gravity?: [number, number, number];
   fov?: number;
   transparent?: boolean;
+  name?: string;
+  email?: string;
 }
 
 export default function Lanyard({
   position = [0, 0, 30],
   gravity = [0, -40, 0],
   fov = 20,
-  transparent = true
+  transparent = true,
+  name,
+  email
 }: LanyardProps) {
   const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
@@ -54,7 +58,7 @@ export default function Lanyard({
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
-          <Band isMobile={isMobile} />
+          <Band isMobile={isMobile} name={name} email={email} />
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
@@ -95,9 +99,11 @@ interface BandProps {
   maxSpeed?: number;
   minSpeed?: number;
   isMobile?: boolean;
+  name?: string;
+  email?: string;
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
+function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: BandProps) {
   // Using "any" for refs since the exact types depend on Rapier's internals
   const band = useRef<any>(null);
   const fixed = useRef<any>(null);
@@ -226,6 +232,37 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
             </mesh>
             <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
+            {(name || email) && (
+              <Html
+                transform
+                occlude="blending"
+                position={[0, -0.15, 0.012]}
+                rotation={[0, 0, 0]}
+                distanceFactor={1}
+                style={{ pointerEvents: 'none' }}
+              >
+                <div
+                  style={{
+                    width: '120px',
+                    textAlign: 'center',
+                    fontFamily: 'Orbitron, ui-sans-serif, system-ui, sans-serif',
+                    color: '#fff',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.55)',
+                    userSelect: 'none',
+                  }}
+                >
+                  <div style={{ fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', opacity: 0.7 }}>
+                    Sublify · Waitlist
+                  </div>
+                  <div style={{ marginTop: 6, fontSize: 14, fontWeight: 800, letterSpacing: '0.02em', textTransform: 'uppercase', lineHeight: 1.1 }}>
+                    {name}
+                  </div>
+                  <div style={{ marginTop: 4, fontSize: 7, letterSpacing: '0.18em', textTransform: 'uppercase', opacity: 0.85, wordBreak: 'break-all' }}>
+                    {email}
+                  </div>
+                </div>
+              </Html>
+            )}
           </group>
         </RigidBody>
       </group>
