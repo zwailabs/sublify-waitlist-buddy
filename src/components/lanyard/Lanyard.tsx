@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unknown-property */
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture, Environment, Lightformer, Html } from '@react-three/drei';
+import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import {
   BallCollider,
   CuboidCollider,
@@ -23,6 +23,124 @@ import './Lanyard.css';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
+const SUBLIFY_LOGO_URL =
+  'https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/Applogo.png';
+
+function drawRoundedRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number
+) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+function fitText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+  startSize: number,
+  minSize: number,
+  weight: number
+) {
+  let size = startSize;
+  while (size > minSize) {
+    ctx.font = `${weight} ${size}px Arial, Helvetica, sans-serif`;
+    if (ctx.measureText(text).width <= maxWidth) break;
+    size -= 4;
+  }
+  return size;
+}
+
+function createInfoTexture(name?: string, email?: string) {
+  if (typeof document === 'undefined') return null;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 1024;
+  canvas.height = 640;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const panelGradient = ctx.createLinearGradient(0, 64, 0, 576);
+  panelGradient.addColorStop(0, 'rgba(10, 10, 14, 0.96)');
+  panelGradient.addColorStop(1, 'rgba(5, 5, 8, 0.82)');
+
+  drawRoundedRect(ctx, 84, 88, 856, 420, 56);
+  ctx.fillStyle = panelGradient;
+  ctx.fill();
+
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
+  ctx.stroke();
+
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.58)';
+  ctx.font = '500 34px Arial, Helvetica, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('SUBLIFY · WAITLIST PASS', canvas.width / 2, 166);
+
+  const primaryText = (name?.trim() || 'WAITLIST').toUpperCase();
+  const secondaryText = (email?.trim() || 'CLAIMED ACCESS').toLowerCase();
+
+  const primarySize = fitText(ctx, primaryText, 720, 118, 64, 700);
+  ctx.font = `700 ${primarySize}px Arial, Helvetica, sans-serif`;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(primaryText, canvas.width / 2, 306);
+
+  const secondarySize = fitText(ctx, secondaryText, 700, 54, 28, 500);
+  ctx.font = `500 ${secondarySize}px Arial, Helvetica, sans-serif`;
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+  ctx.fillText(secondaryText, canvas.width / 2, 390);
+
+  ctx.beginPath();
+  ctx.moveTo(224, 436);
+  ctx.lineTo(800, 436);
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
+  ctx.stroke();
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function createWordmarkTexture(text: string) {
+  if (typeof document === 'undefined') return null;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 768;
+  canvas.height = 160;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.86)';
+  ctx.font = '700 72px Arial, Helvetica, sans-serif';
+  ctx.fillText(text, canvas.width / 2, 108);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.needsUpdate = true;
+  return texture;
+}
+
 interface LanyardProps {
   position?: [number, number, number];
   gravity?: [number, number, number];
@@ -33,7 +151,7 @@ interface LanyardProps {
 }
 
 export default function Lanyard({
-  position = [0, 0, 30],
+  position = [0, 0, 28],
   gravity = [0, -40, 0],
   fov = 20,
   transparent = true,
@@ -127,6 +245,16 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
 
   const { nodes, materials } = useGLTF(cardGLB) as any;
   const texture = useTexture(lanyard);
+  const logoTexture = useTexture(SUBLIFY_LOGO_URL);
+  const infoTexture = useMemo(() => createInfoTexture(name, email), [name, email]);
+  const wordmarkTexture = useMemo(() => createWordmarkTexture('SUBLIFY'), []);
+  const cardMaterial = useMemo(() => {
+    const baseMaterial = (materials.base?.clone?.() ?? new THREE.MeshStandardMaterial()) as THREE.MeshStandardMaterial;
+    baseMaterial.color = new THREE.Color('#0e0e12');
+    baseMaterial.roughness = 0.42;
+    baseMaterial.metalness = 0.38;
+    return baseMaterial;
+  }, [materials.base]);
   const [curve] = useState(
     () =>
       new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
@@ -185,10 +313,11 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
 
   curve.curveType = 'chordal';
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  logoTexture.colorSpace = THREE.SRGBColorSpace;
 
   return (
     <>
-      <group position={[0, 4, 0]}>
+      <group position={[0, 4.1, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type={'fixed' as RigidBodyProps['type']} />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps} type={'dynamic' as RigidBodyProps['type']}>
           <BallCollider args={[0.1]} />
@@ -206,9 +335,9 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
           type={dragged ? ('kinematicPosition' as RigidBodyProps['type']) : ('dynamic' as RigidBodyProps['type'])}
         >
           <CuboidCollider args={[0.8, 1.125, 0.01]} />
-          <group
-            scale={2.25}
-            position={[0, -1.2, -0.05]}
+            <group
+              scale={1.9}
+              position={[0, -1.02, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
             onPointerUp={(e: any) => {
@@ -221,68 +350,36 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, name, email }: Ba
             }}
           >
             <mesh geometry={nodes.card.geometry}>
-              <meshPhysicalMaterial
-                color="#0a0a0a"
-                clearcoat={isMobile ? 0 : 1}
-                clearcoatRoughness={0.15}
-                roughness={0.6}
-                metalness={0.5}
-              />
+              <primitive object={cardMaterial} attach="material" />
             </mesh>
             <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
-            <Html
-              transform
-              position={[0, 0, 0.021]}
-              scale={0.18}
-              zIndexRange={[100, 0]}
-              style={{ pointerEvents: 'none' }}
-            >
-              <div
-                style={{
-                  width: 360,
-                  height: 540,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '36px 24px',
-                  boxSizing: 'border-box',
-                  fontFamily: 'Orbitron, ui-sans-serif, system-ui, sans-serif',
-                  color: '#0a0a0a',
-                  background: '#ffffff',
-                  userSelect: 'none',
-                }}
-              >
-                <div style={{ width: '100%', textAlign: 'center' }}>
-                  <div style={{ fontSize: 14, letterSpacing: '0.32em', textTransform: 'uppercase', opacity: 0.55 }}>
-                    Sublify · Waitlist
-                  </div>
-                  {(name || email) && (
-                    <>
-                      <div style={{ marginTop: 28, fontSize: 44, fontWeight: 900, letterSpacing: '0.02em', textTransform: 'uppercase', lineHeight: 1, color: '#000' }}>
-                        {name}
-                      </div>
-                      <div style={{ marginTop: 14, fontSize: 18, letterSpacing: '0.18em', textTransform: 'lowercase', opacity: 0.7, wordBreak: 'break-all' }}>
-                        {email}
-                      </div>
-                    </>
-                  )}
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                  <img
-                    src="https://ginfumybqtwwiglisfwd.supabase.co/storage/v1/object/public/SUBLIFY%20WEB%20IMGS/Applogo.png"
-                    alt="Sublify"
-                    width={56}
-                    height={56}
-                    style={{ borderRadius: 8, display: 'block' }}
-                  />
-                  <div style={{ fontSize: 12, letterSpacing: '0.32em', textTransform: 'uppercase', opacity: 0.7 }}>
-                    Sublify
-                  </div>
-                </div>
-              </div>
-            </Html>
+            <mesh position={[0, -0.03, 0.022]}>
+              <planeGeometry args={[1.42, 1.92]} />
+              <meshPhysicalMaterial
+                color="#08090d"
+                roughness={0.34}
+                metalness={0.58}
+                clearcoat={1}
+                clearcoatRoughness={0.18}
+              />
+            </mesh>
+            {infoTexture && (
+              <mesh position={[0, 0.2, 0.024]}>
+                <planeGeometry args={[1.14, 0.72]} />
+                <meshBasicMaterial transparent map={infoTexture} />
+              </mesh>
+            )}
+            <mesh position={[0, -0.6, 0.024]}>
+              <planeGeometry args={[0.42, 0.42]} />
+              <meshBasicMaterial transparent map={logoTexture} />
+            </mesh>
+            {wordmarkTexture && (
+              <mesh position={[0, -0.88, 0.024]}>
+                <planeGeometry args={[0.72, 0.16]} />
+                <meshBasicMaterial transparent map={wordmarkTexture} />
+              </mesh>
+            )}
           </group>
         </RigidBody>
       </group>
