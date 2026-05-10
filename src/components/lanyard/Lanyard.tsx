@@ -132,16 +132,17 @@ function createWordmarkTexture(text: string) {
   if (typeof document === 'undefined') return null;
 
   const canvas = document.createElement('canvas');
-  canvas.width = 1536;
-  canvas.height = 320;
+  canvas.width = 3072;
+  canvas.height = 640;
 
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
 
-  ctx.scale(2, 2);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.scale(4, 4);
+  ctx.imageSmoothingQuality = 'high';
+  ctx.clearRect(0, 0, 768, 160);
   ctx.textAlign = 'center';
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
   ctx.font = '800 96px Arial, Helvetica, sans-serif';
   ctx.fillText(text, 768 / 2, 116);
 
