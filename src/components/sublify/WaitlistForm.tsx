@@ -1,8 +1,8 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 
 const loadLanyard = () => import("@/components/lanyard/Lanyard");
-const Lanyard = lazy(loadLanyard);
 
 const schema = z.object({
   name: z
@@ -34,15 +34,14 @@ function readList(): Entry[] {
 type Ticket = { position: number; name: string; email: string };
 
 export function WaitlistForm() {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [ticket, setTicket] = useState<Ticket | null>(null);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     setCount(readList().length);
-    // Warm up the heavy 3D chunk so the lanyard appears instantly on submit.
     const w = window as Window & {
       requestIdleCallback?: (cb: () => void) => number;
     };
@@ -51,6 +50,10 @@ export function WaitlistForm() {
       void loadLanyard();
     });
   }, []);
+
+  function goToTicket(ticketName: string, ticketEmail: string) {
+    navigate({ to: "/lanyard", search: { name: ticketName, email: ticketEmail } });
+  }
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -64,7 +67,7 @@ export function WaitlistForm() {
     const existingIdx = list.findIndex((e) => e.email === normalized);
     if (existingIdx >= 0) {
       setError(null);
-      setTicket({ position: existingIdx + 1, name: list[existingIdx].name, email: normalized });
+      goToTicket(list[existingIdx].name, normalized);
       return;
     }
     const next: Entry[] = [
@@ -77,45 +80,10 @@ export function WaitlistForm() {
     ];
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     setError(null);
-    setTicket({ position: next.length, name: parsed.data.name, email: normalized });
     setCount(next.length);
     setName("");
     setEmail("");
-  }
-
-  if (ticket !== null) {
-    return (
-      <div className="rise rounded border border-border bg-card p-4">
-        <div className="flex items-center justify-between">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-            Ticket · No. {String(ticket.position).padStart(4, "0")}
-          </p>
-          <button
-            onClick={() => setTicket(null)}
-            className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground underline underline-offset-4 hover:text-foreground hover:no-underline"
-          >
-            Claim another
-          </button>
-        </div>
-        <h3 className="mt-3 font-display text-2xl font-semibold text-foreground">
-          You're in.
-        </h3>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Drag your ticket below.
-        </p>
-        <div className="relative mt-4 h-[420px] w-full overflow-hidden rounded">
-          <Suspense
-            fallback={
-              <div className="flex h-full w-full items-center justify-center font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                Printing your ticket…
-              </div>
-            }
-          >
-            <Lanyard position={[0, 0, 18]} gravity={[0, -40, 0]} name={ticket.name} email={ticket.email} />
-          </Suspense>
-        </div>
-      </div>
-    );
+    goToTicket(parsed.data.name, normalized);
   }
 
   return (
