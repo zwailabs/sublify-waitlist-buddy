@@ -68,8 +68,10 @@ function createInfoTexture(name?: string, email?: string) {
   if (typeof document === 'undefined') return null;
 
   const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 640;
+  canvas.width = 2048;
+  canvas.height = 1280;
+  const ctx0 = canvas.getContext('2d');
+  if (ctx0) ctx0.scale(2, 2);
 
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
