@@ -79,7 +79,7 @@ function Index() {
 
           {/* Right — form */}
           <div id="waitlist" className="flex flex-col justify-center lg:col-span-4">
-            <h1 className="font-display text-3xl font-bold uppercase leading-[1.05] tracking-tight sm:text-4xl lg:text-5xl">
+            <h1 className="font-display text-3xl font-black uppercase leading-[1.05] tracking-[0.02em] sm:text-4xl lg:text-5xl">
               Claim your ticket.
             </h1>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
