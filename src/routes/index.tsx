@@ -63,11 +63,11 @@ function Index() {
       <section className="flex-1">
         <div className="mx-auto grid max-w-[1500px] gap-10 px-6 py-12 lg:grid-cols-12 lg:gap-14 lg:px-10 lg:py-16">
           {/* Left — image */}
-          <div className="rise relative w-full overflow-hidden rounded-md border border-border bg-card lg:col-span-8">
+          <div className="rise relative aspect-[4/3] w-full overflow-hidden rounded-md border border-border bg-card lg:col-span-8 lg:aspect-[16/10]">
             <img
               src={heroImage}
               alt="Sublify preview"
-              className="h-auto w-full object-contain"
+              className="absolute inset-0 h-full w-full object-cover"
               loading="eager"
               decoding="async"
             />
