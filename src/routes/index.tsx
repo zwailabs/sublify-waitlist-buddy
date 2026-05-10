@@ -93,13 +93,13 @@ function Index() {
       {/* Footer */}
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:px-6 lg:px-10">
-          <div className="flex flex-col items-center justify-between gap-3 text-center sm:flex-row sm:text-left">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col items-center gap-3 text-center sm:grid sm:grid-cols-3 sm:items-center sm:text-left">
+            <div className="flex items-center gap-2 sm:justify-self-start">
               <SublifyMark small />
               <span>Sublify © {new Date().getFullYear()}</span>
             </div>
-            <span className="blink">Pre-launch · v1.2.9</span>
-            <span>Crafted with love by ZW &amp; AI</span>
+            <span className="blink sm:justify-self-center sm:text-center">Pre-launch · v1.2.9</span>
+            <span className="sm:justify-self-end sm:text-right">Crafted with love by ZW &amp; AI</span>
           </div>
           <nav className="flex items-center justify-center gap-8 pt-2">
             <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
