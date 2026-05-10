@@ -30,8 +30,8 @@ function PrivacyPage() {
     <SiteShell>
       <div className="mx-auto grid max-w-[1400px] gap-12 px-4 py-12 sm:px-8 sm:py-16 lg:grid-cols-12 lg:gap-16 lg:px-20 lg:py-20">
         <article
-          className={`lg:col-span-9 transition-all duration-300 ${
-            tocFocused ? "blur-sm opacity-60" : "opacity-100"
+          className={`lg:col-span-9 transition-opacity duration-200 ${
+            tocFocused ? "opacity-60" : "opacity-100"
           }`}
         >
           <Link
@@ -47,7 +47,7 @@ function PrivacyPage() {
             Privacy Policy
           </h1>
 
-          <div className="mt-12 space-y-12 text-base leading-7 text-foreground/80">
+          <div className="mt-12 space-y-12 font-sans text-base leading-7 text-foreground/80">
             <section id="introduction" className="scroll-mt-24">
               <h2 className="text-base font-semibold uppercase tracking-wider text-foreground">
                 01 · Introduction
