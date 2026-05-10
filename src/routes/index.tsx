@@ -36,7 +36,10 @@ function Index() {
   );
 
   return (
-    <main className="flex min-h-screen flex-col bg-background text-foreground">
+    <main className="relative flex min-h-screen flex-col bg-background text-foreground">
+      {/* Side rails */}
+      <div aria-hidden className="pointer-events-none fixed inset-y-0 left-6 z-10 w-px bg-border lg:left-10" />
+      <div aria-hidden className="pointer-events-none fixed inset-y-0 right-6 z-10 w-px bg-border lg:right-10" />
       {/* Top navbar */}
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
