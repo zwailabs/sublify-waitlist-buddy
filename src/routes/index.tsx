@@ -38,7 +38,7 @@ function Index() {
       <div aria-hidden className="pointer-events-none fixed inset-y-0 right-6 z-10 w-px bg-border lg:right-10" />
       {/* Top navbar */}
       <header className="border-b border-border">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-4 sm:px-6 sm:py-5 lg:px-10">
           <div className="flex items-center gap-2">
             <SublifyMark />
           </div>
