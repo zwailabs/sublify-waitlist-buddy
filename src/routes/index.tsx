@@ -101,13 +101,11 @@ function Index() {
             <span className="blink">Pre-launch · v1.2.9</span>
             <span>Crafted with love by ZW &amp; AI</span>
           </div>
-          <div className="border-t border-border pt-3">
-            <nav className="flex items-center justify-center gap-6 sm:justify-start">
-              <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
-              <Link to="/terms" className="hover:text-foreground">Terms</Link>
-              <Link to="/support" className="hover:text-foreground">Support</Link>
-            </nav>
-          </div>
+          <nav className="flex items-center justify-center gap-8 pt-2">
+            <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
+            <Link to="/terms" className="hover:text-foreground">Terms</Link>
+            <Link to="/support" className="hover:text-foreground">Support</Link>
+          </nav>
         </div>
       </footer>
     </main>
