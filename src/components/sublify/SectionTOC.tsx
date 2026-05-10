@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 
 export type TOCItem = { id: string; label: string };
 
@@ -9,7 +9,35 @@ export function SectionTOC({
   items: TOCItem[];
   onFocusChange?: (focused: boolean) => void;
 }) {
-  const active = useMemo(() => items[0]?.id ?? "", [items]);
+  const [active, setActive] = useState(items[0]?.id ?? "");
+
+  useEffect(() => {
+    const sections = items
+      .map((item) => document.getElementById(item.id))
+      .filter((section): section is HTMLElement => Boolean(section));
+
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible?.target?.id) {
+          setActive(visible.target.id);
+        }
+      },
+      {
+        rootMargin: "-18% 0px -55% 0px",
+        threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, [items]);
 
   return (
     <nav
