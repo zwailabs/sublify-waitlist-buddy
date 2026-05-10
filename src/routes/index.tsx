@@ -34,11 +34,11 @@ function Index() {
   return (
     <main className="relative flex min-h-screen flex-col bg-background text-foreground">
       {/* Side rails */}
-      <div aria-hidden className="pointer-events-none fixed inset-y-0 left-6 z-10 w-px bg-border lg:left-10" />
-      <div aria-hidden className="pointer-events-none fixed inset-y-0 right-6 z-10 w-px bg-border lg:right-10" />
+      <div aria-hidden className="pointer-events-none fixed inset-y-0 left-2 z-10 w-px bg-border sm:left-6 lg:left-10" />
+      <div aria-hidden className="pointer-events-none fixed inset-y-0 right-2 z-10 w-px bg-border sm:right-6 lg:right-10" />
       {/* Top navbar */}
       <header className="border-b border-border">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-4 sm:px-6 sm:py-5 lg:px-10">
           <div className="flex items-center gap-2">
             <SublifyMark />
           </div>
@@ -57,7 +57,7 @@ function Index() {
 
       {/* Body — split */}
       <section className="flex-1">
-        <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-12 py-12 lg:grid-cols-12 lg:gap-14 lg:px-20 lg:py-16">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-8 px-4 py-8 sm:px-8 sm:py-12 lg:grid-cols-12 lg:gap-14 lg:px-20 lg:py-16">
           {/* Left — image */}
           <div className="rise relative mx-auto w-full max-w-[800px] overflow-hidden rounded-md border border-border bg-card lg:col-span-7" style={{ aspectRatio: "800 / 600" }}>
             <img
@@ -74,8 +74,8 @@ function Index() {
           </div>
 
           {/* Right — form */}
-          <div id="waitlist" className="w-full max-w-md justify-self-start p-8 text-left lg:col-span-5 lg:p-10">
-            <h1 className="font-display text-3xl font-black uppercase leading-[1.05] tracking-[0.02em] sm:text-4xl lg:text-5xl">
+          <div id="waitlist" className="w-full max-w-md justify-self-start px-0 py-2 text-left sm:p-8 lg:col-span-5 lg:p-10">
+            <h1 className="font-display text-2xl font-black uppercase leading-[1.05] tracking-[0.02em] sm:text-4xl lg:text-5xl">
               Claim your ticket.
             </h1>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
@@ -92,7 +92,7 @@ function Index() {
 
       {/* Footer */}
       <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-6 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:flex-row lg:px-10">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:flex-row sm:px-6 sm:text-left lg:px-10">
           <div className="flex items-center gap-2">
             <SublifyMark small />
             <span>Sublify © {new Date().getFullYear()}</span>
