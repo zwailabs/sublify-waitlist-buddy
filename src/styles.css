@@ -95,9 +95,9 @@
   --paper: oklch(0.97 0 0);
   --paper-deep: oklch(0.12 0 0);
 
-  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Orbitron", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Orbitron", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Orbitron", ui-monospace, monospace;
 
   --chart-1: oklch(0.16 0 0);
   --chart-2: oklch(0.42 0.005 80);
