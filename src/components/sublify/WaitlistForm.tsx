@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 const loadLanyard = () => import("@/components/lanyard/Lanyard");
 
@@ -16,31 +17,21 @@ const schema = z.object({
     .email({ message: "That doesn't look like a valid email" }),
 });
 
-const STORAGE_KEY = "sublify:waitlist";
-
-type Entry = { name: string; email: string; joinedAt: string };
-
-function readList(): Entry[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Entry[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-type Ticket = { position: number; name: string; email: string };
-
 export function WaitlistForm() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [count, setCount] = useState(0);
 
+  async function refreshCount() {
+    const { data, error: rpcError } = await supabase.rpc("get_waitlist_count");
+    if (!rpcError && typeof data === "number") setCount(data);
+  }
+
   useEffect(() => {
-    setCount(readList().length);
+    void refreshCount();
     const w = window as Window & {
       requestIdleCallback?: (cb: () => void) => number;
     };
@@ -54,35 +45,39 @@ export function WaitlistForm() {
     navigate({ to: "/lanyard", search: { name: ticketName, email: ticketEmail } });
   }
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (submitting) return;
     const parsed = schema.safeParse({ name, email });
     if (!parsed.success) {
       setError(parsed.error.issues[0].message);
       return;
     }
-    const list = readList();
-    const normalized = parsed.data.email.toLowerCase();
-    const existingIdx = list.findIndex((e) => e.email === normalized);
-    if (existingIdx >= 0) {
-      setError(null);
-      goToTicket(list[existingIdx].name, normalized);
+    const cleanEmail = parsed.data.email.toLowerCase();
+    const cleanName = parsed.data.name;
+
+    setSubmitting(true);
+    const { error: insertError } = await supabase
+      .from("waitlist")
+      .insert({ name: cleanName, email: cleanEmail });
+    setSubmitting(false);
+
+    if (insertError) {
+      // Duplicate email — still take them to their ticket
+      if (insertError.code === "23505") {
+        setError(null);
+        goToTicket(cleanName, cleanEmail);
+        return;
+      }
+      setError("Something went wrong. Please try again.");
       return;
     }
-    const next: Entry[] = [
-      ...list,
-      {
-        name: parsed.data.name,
-        email: normalized,
-        joinedAt: new Date().toISOString(),
-      },
-    ];
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+
     setError(null);
-    setCount(next.length);
     setName("");
     setEmail("");
-    goToTicket(parsed.data.name, normalized);
+    void refreshCount();
+    goToTicket(cleanName, cleanEmail);
   }
 
   return (
@@ -116,10 +111,11 @@ export function WaitlistForm() {
         />
         <button
           type="submit"
-          className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded bg-foreground px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-background shadow-[0_0_0_0_rgba(255,255,255,0)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-10px_rgba(255,255,255,0.35)] active:translate-y-0 active:scale-[0.98] active:duration-75"
+          disabled={submitting}
+          className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded bg-foreground px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-background shadow-[0_0_0_0_rgba(255,255,255,0)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-10px_rgba(255,255,255,0.35)] active:translate-y-0 active:scale-[0.98] active:duration-75 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-background/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
-          <span className="relative">Claim your ticket</span>
+          <span className="relative">{submitting ? "Claiming..." : "Claim your ticket"}</span>
           <span className="relative transition-transform duration-300 group-hover:translate-x-1">
             →
           </span>
