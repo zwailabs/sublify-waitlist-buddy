@@ -26,33 +26,38 @@ function LanyardPage() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   useEffect(() => {
-    if (!mounted || !name) return;
+    if (!mounted || !name || !canvasRef.current) return;
     let cancelled = false;
     let stopFn: (() => void) | undefined;
 
     (async () => {
-      const confetti = (await import("canvas-confetti")).default;
-      if (cancelled) return;
+      const mod = await import("canvas-confetti");
+      if (cancelled || !canvasRef.current) return;
+      const myConfetti = mod.create(canvasRef.current, {
+        resize: true,
+        useWorker: false,
+      });
 
-      // Initial big celebratory pops from bottom-left & bottom-right after the card settles
       const fire = () => {
         const colors = ["#ffffff", "#f0d78c", "#e85d3a", "#4f46e5", "#2dd4a8"];
-        confetti({
+        myConfetti({
           particleCount: 90,
           angle: 60,
           spread: 70,
-          startVelocity: 65,
+          startVelocity: 55,
           origin: { x: 0, y: 1 },
           colors,
           scalar: 1.1,
           ticks: 220,
         });
-        confetti({
+        myConfetti({
           particleCount: 90,
           angle: 120,
           spread: 70,
-          startVelocity: 65,
+          startVelocity: 55,
           origin: { x: 1, y: 1 },
           colors,
           scalar: 1.1,
@@ -60,7 +65,6 @@ function LanyardPage() {
         });
       };
 
-      // Wait for the card to drop & settle
       const t1 = window.setTimeout(fire, 1400);
       const t2 = window.setTimeout(fire, 1900);
       const t3 = window.setTimeout(fire, 2500);
@@ -69,6 +73,7 @@ function LanyardPage() {
         clearTimeout(t1);
         clearTimeout(t2);
         clearTimeout(t3);
+        myConfetti.reset();
       };
     })();
 
@@ -98,6 +103,10 @@ function LanyardPage() {
               <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} name={name} email={email} />
             </Suspense>
           ) : null}
+          <canvas
+            ref={canvasRef}
+            className="pointer-events-none absolute inset-0 h-full w-full"
+          />
         </div>
       </div>
     </SiteShell>
