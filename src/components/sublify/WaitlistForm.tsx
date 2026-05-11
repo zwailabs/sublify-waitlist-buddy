@@ -9,12 +9,11 @@ const schema = z.object({
     .string()
     .trim()
     .min(1, { message: "Please enter your name" })
-    .max(80),
+    .max(22),
   email: z
     .string()
     .trim()
-    .email({ message: "That doesn't look like a valid email" })
-    .max(255),
+    .email({ message: "That doesn't look like a valid email" }),
 });
 
 const STORAGE_KEY = "sublify:waitlist";
