@@ -91,10 +91,10 @@ export function WaitlistForm() {
         <input
           type="text"
           required
-          maxLength={80}
+          maxLength={22}
           value={name}
           onChange={(e) => {
-            setName(e.target.value);
+            setName(e.target.value.slice(0, 22));
             if (error) setError(null);
           }}
           placeholder="Your name"
@@ -105,7 +105,6 @@ export function WaitlistForm() {
         <input
           type="email"
           required
-          maxLength={255}
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
