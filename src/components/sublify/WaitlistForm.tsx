@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 const loadLanyard = () => import("@/components/lanyard/Lanyard");
 
@@ -16,31 +17,21 @@ const schema = z.object({
     .email({ message: "That doesn't look like a valid email" }),
 });
 
-const STORAGE_KEY = "sublify:waitlist";
-
-type Entry = { name: string; email: string; joinedAt: string };
-
-function readList(): Entry[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Entry[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-type Ticket = { position: number; name: string; email: string };
-
 export function WaitlistForm() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [count, setCount] = useState(0);
 
+  async function refreshCount() {
+    const { data, error: rpcError } = await supabase.rpc("get_waitlist_count");
+    if (!rpcError && typeof data === "number") setCount(data);
+  }
+
   useEffect(() => {
-    setCount(readList().length);
+    void refreshCount();
     const w = window as Window & {
       requestIdleCallback?: (cb: () => void) => number;
     };
@@ -54,35 +45,39 @@ export function WaitlistForm() {
     navigate({ to: "/lanyard", search: { name: ticketName, email: ticketEmail } });
   }
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (submitting) return;
     const parsed = schema.safeParse({ name, email });
     if (!parsed.success) {
       setError(parsed.error.issues[0].message);
       return;
     }
-    const list = readList();
-    const normalized = parsed.data.email.toLowerCase();
-    const existingIdx = list.findIndex((e) => e.email === normalized);
-    if (existingIdx >= 0) {
-      setError(null);
-      goToTicket(list[existingIdx].name, normalized);
+    const cleanEmail = parsed.data.email.toLowerCase();
+    const cleanName = parsed.data.name;
+
+    setSubmitting(true);
+    const { error: insertError } = await supabase
+      .from("waitlist")
+      .insert({ name: cleanName, email: cleanEmail });
+    setSubmitting(false);
+
+    if (insertError) {
+      // Duplicate email — still take them to their ticket
+      if (insertError.code === "23505") {
+        setError(null);
+        goToTicket(cleanName, cleanEmail);
+        return;
+      }
+      setError("Something went wrong. Please try again.");
       return;
     }
-    const next: Entry[] = [
-      ...list,
-      {
-        name: parsed.data.name,
-        email: normalized,
-        joinedAt: new Date().toISOString(),
-      },
-    ];
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+
     setError(null);
-    setCount(next.length);
     setName("");
     setEmail("");
-    goToTicket(parsed.data.name, normalized);
+    void refreshCount();
+    goToTicket(cleanName, cleanEmail);
   }
 
   return (
