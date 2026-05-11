@@ -26,6 +26,58 @@ function LanyardPage() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
+  useEffect(() => {
+    if (!mounted || !name) return;
+    let cancelled = false;
+    let stopFn: (() => void) | undefined;
+
+    (async () => {
+      const confetti = (await import("canvas-confetti")).default;
+      if (cancelled) return;
+
+      // Initial big celebratory pops from bottom-left & bottom-right after the card settles
+      const fire = () => {
+        const colors = ["#ffffff", "#f0d78c", "#e85d3a", "#4f46e5", "#2dd4a8"];
+        confetti({
+          particleCount: 90,
+          angle: 60,
+          spread: 70,
+          startVelocity: 65,
+          origin: { x: 0, y: 1 },
+          colors,
+          scalar: 1.1,
+          ticks: 220,
+        });
+        confetti({
+          particleCount: 90,
+          angle: 120,
+          spread: 70,
+          startVelocity: 65,
+          origin: { x: 1, y: 1 },
+          colors,
+          scalar: 1.1,
+          ticks: 220,
+        });
+      };
+
+      // Wait for the card to drop & settle
+      const t1 = window.setTimeout(fire, 1400);
+      const t2 = window.setTimeout(fire, 1900);
+      const t3 = window.setTimeout(fire, 2500);
+
+      stopFn = () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+      };
+    })();
+
+    return () => {
+      cancelled = true;
+      stopFn?.();
+    };
+  }, [mounted, name]);
+
   return (
     <SiteShell>
       <div className="relative mx-auto w-full max-w-[1400px] px-4 sm:px-8 lg:px-20">
